@@ -11,9 +11,6 @@ A Firefox extension that adds a convenient way to check eBay prices for items yo
 
 ## Installation
 
-### Installation
-https://addons.mozilla.org/en-US/firefox/addon/sgwpricecheck/
-
 ### Temporary Installation (Development)
 1. Download or clone this repository
 2. Open Firefox and go to `about:debugging`
@@ -22,7 +19,7 @@ https://addons.mozilla.org/en-US/firefox/addon/sgwpricecheck/
 5. Navigate to the extension directory and select `manifest.json`
 
 ### Permanent Installation
-*Coming soon to Firefox Add-ons*
+https://addons.mozilla.org/en-US/firefox/addon/sgwpricecheck/
 
 ## Usage
 
