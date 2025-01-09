@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Goodwill eBay Price Checker",
-    "version": "2.3",
+    "version": "2.4",
     "description": "Right-click to check eBay prices for Goodwill items",
     "permissions": [
         "contextMenus",
@@ -12,12 +12,5 @@
     "background": {
         "scripts": ["background.js"],
         "persistent": true
-    },
-    "content_scripts": [
-        {
-            "matches": ["*://*.shopgoodwill.com/item/*"],
-            "js": ["content.js"],
-            "run_at": "document_start"
-        }
-    ]
+    }
 }
