@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Goodwill eBay Price Checker",
-    "version": "1.7",
+    "version": "1.7b",
     "description": "Right-click to check eBay prices for Goodwill items",
     "permissions": [
       "contextMenus",
