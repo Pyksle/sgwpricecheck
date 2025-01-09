@@ -1,14 +1,21 @@
+// manifest.json
 {
-    "manifest_version": 2,
-    "name": "Goodwill eBay Price Checker",
-    "version": "1.8",
-    "description": "Right-click to check eBay prices for Goodwill items",
-    "permissions": [
-      "contextMenus",
-      "activeTab",
-      "*://*.shopgoodwill.com/*"
-    ],
-    "background": {
-      "scripts": ["background.js"]
+  "manifest_version": 2,
+  "name": "Goodwill eBay Price Checker",
+  "version": "1.9",
+  "description": "Right-click to check eBay prices for Goodwill items",
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "*://*.shopgoodwill.com/*"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.shopgoodwill.com/item/*"],
+      "js": ["content.js"]
     }
-  }
+  ]
+}
