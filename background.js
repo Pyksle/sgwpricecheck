@@ -2,21 +2,22 @@ let lastFoundTitle = null;
 
 // Create context menu items
 browser.contextMenus.create({
-  id: "check-ebay-link",
-  title: "🔍 Compare on eBay",
-  contexts: ["link"],
-  documentUrlPatterns: ["*://*.shopgoodwill.com/*"]
+    id: "check-ebay-link",
+    title: "🔍 Compare on eBay",
+    contexts: ["link"],
+    documentUrlPatterns: ["*://*.shopgoodwill.com/*"]
 });
 
 browser.contextMenus.create({
-  id: "check-ebay-page",
-  title: "🔍 Compare This Item on eBay",
-  contexts: ["page"],
-  documentUrlPatterns: ["*://*.shopgoodwill.com/item/*"]
+    id: "check-ebay-page",
+    title: "🔍 Compare This Item on eBay",
+    contexts: ["page"],
+    documentUrlPatterns: ["*://*.shopgoodwill.com/item/*"]
 });
 
+// All the cleaning function code stays the same
 function cleanSearchTerm(title) {
-  // Common marketing and condition terms to remove
+    // Common marketing and condition terms to remove
   const termsToRemove = [
     // Marketing Terms
     'TESTED',
@@ -135,13 +136,6 @@ function cleanSearchTerm(title) {
   return cleanedTitle;
 }
 
-// Listen for messages from content script
-browser.runtime.onMessage.addListener((message) => {
-  if (message.type === 'itemTitle') {
-    lastFoundTitle = message.title;
-  }
-});
-
 function processTitle(title) {
     const cleanedTitle = cleanSearchTerm(title);
     console.log('Original:', title);
@@ -156,28 +150,27 @@ function processTitle(title) {
 }
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
-    let title;
-    
     if (info.menuItemId === "check-ebay-link") {
-        title = info.linkText || info.linkUrl.split('/').pop();
+        const title = info.linkText || info.linkUrl.split('/').pop();
         if (title) {
             processTitle(title);
         }
     } else if (info.menuItemId === "check-ebay-page") {
-        // First try the stored title
-        browser.tabs.executeScript({
-            code: `sessionStorage.getItem('goodwillItemTitle')`
-        }).then(result => {
-            let title = result[0] || lastFoundTitle;
+        // Inject and execute content script directly
+        browser.tabs.executeScript(tab.id, {
+            code: `
+                const titleElement = document.querySelector('.mb-4.d-none.d-md-block.ng-star-inserted');
+                titleElement ? titleElement.textContent.trim() : null;
+            `
+        }).then(results => {
+            const title = results[0];
             if (title) {
                 processTitle(title);
+            } else {
+                console.log('No title found');
             }
         }).catch(err => {
-            console.log('Script execution error:', err);
-            // Fallback to lastFoundTitle if script fails
-            if (lastFoundTitle) {
-                processTitle(lastFoundTitle);
-            }
+            console.error('Script execution error:', err);
         });
     }
 });
