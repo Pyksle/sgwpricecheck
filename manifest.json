@@ -1,20 +1,23 @@
 {
-  "manifest_version": 2,
-  "name": "Goodwill eBay Price Checker",
-  "version": "2",
-  "description": "Right-click to check eBay prices for Goodwill items",
-  "permissions": [
-    "contextMenus",
-    "activeTab",
-    "*://*.shopgoodwill.com/*"
-  ],
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "content_scripts": [
-    {
-      "matches": ["*://*.shopgoodwill.com/item/*"],
-      "js": ["content.js"]
-    }
-  ]
+    "manifest_version": 2,
+    "name": "Goodwill eBay Price Checker",
+    "version": "2.1",
+    "description": "Right-click to check eBay prices for Goodwill items",
+    "permissions": [
+        "contextMenus",
+        "activeTab",
+        "*://*.shopgoodwill.com/*",
+        "scripting"
+    ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": true
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.shopgoodwill.com/item/*"],
+            "js": ["content.js"],
+            "run_at": "document_end"
+        }
+    ]
 }
