@@ -142,16 +142,7 @@ browser.runtime.onMessage.addListener((message) => {
   }
 });
 
-browser.contextMenus.onClicked.addListener((info, tab) => {
-  let title;
-  
-  if (info.menuItemId === "check-ebay-link") {
-    title = info.linkText || info.linkUrl.split('/').pop();
-  } else if (info.menuItemId === "check-ebay-page") {
-    title = lastFoundTitle;
-  }
-
-  if (title) {
+function processTitle(title) {
     const cleanedTitle = cleanSearchTerm(title);
     console.log('Original:', title);
     console.log('Cleaned:', cleanedTitle);
@@ -160,7 +151,33 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
     const ebayUrl = `https://www.ebay.com/sch/i.html?_from=R40&_nkw=${encodedName}&rt=nc&LH_Sold=1&LH_Complete=1`;
     
     browser.tabs.create({
-      url: ebayUrl
+        url: ebayUrl
     });
-  }
+}
+
+browser.contextMenus.onClicked.addListener((info, tab) => {
+    let title;
+    
+    if (info.menuItemId === "check-ebay-link") {
+        title = info.linkText || info.linkUrl.split('/').pop();
+        if (title) {
+            processTitle(title);
+        }
+    } else if (info.menuItemId === "check-ebay-page") {
+        // First try the stored title
+        browser.tabs.executeScript({
+            code: `sessionStorage.getItem('goodwillItemTitle')`
+        }).then(result => {
+            let title = result[0] || lastFoundTitle;
+            if (title) {
+                processTitle(title);
+            }
+        }).catch(err => {
+            console.log('Script execution error:', err);
+            // Fallback to lastFoundTitle if script fails
+            if (lastFoundTitle) {
+                processTitle(lastFoundTitle);
+            }
+        });
+    }
 });
