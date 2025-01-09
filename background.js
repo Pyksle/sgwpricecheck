@@ -1,26 +1,3 @@
-// manifest.json
-{
-  "manifest_version": 2,
-  "name": "Goodwill eBay Price Checker",
-  "version": "1.1",
-  "description": "Right-click to check eBay prices for Goodwill items",
-  "permissions": [
-    "contextMenus",
-    "activeTab",
-    "*://*.shopgoodwill.com/*"
-  ],
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "content_scripts": [
-    {
-      "matches": ["*://*.shopgoodwill.com/item/*"],
-      "js": ["content.js"]
-    }
-  ]
-}
-
-// background.js
 let lastFoundTitle = null;
 
 // Create context menu items
@@ -186,24 +163,4 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
       url: ebayUrl
     });
   }
-});
-
-// content.js
-function findItemTitle() {
-  const titleElement = document.querySelector('.mb-4.d-none.d-md-block.ng-star-inserted');
-  if (titleElement) {
-    const title = titleElement.textContent.trim();
-    browser.runtime.sendMessage({
-      type: 'itemTitle',
-      title: title
-    });
-  }
-}
-
-// Run initially and on any DOM changes
-findItemTitle();
-const observer = new MutationObserver(findItemTitle);
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
 });
